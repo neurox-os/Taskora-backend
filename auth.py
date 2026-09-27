@@ -90,8 +90,8 @@ async def create_account(user : New_User, db : db_dependency,  response : Respon
   refresh = create_token(new_user.email, timedelta(days=7), "refresh")
     
    
-  response.set_cookie(key="access_token", value=token, httponly=True, secure=True, samesite="lax", max_age=600)
-  response.set_cookie(key="refresh_token", value=refresh, httponly=True, secure=True, samesite="lax", max_age=7*24*3600)
+  response.set_cookie(key="access_token", value=token, httponly=True, secure=True, samesite="none", max_age=600)
+  response.set_cookie(key="refresh_token", value=refresh, httponly=True, secure=True, samesite="none", max_age=7*24*3600)
   
   return {"message" : "Account Created Successfully",
           "access_token": token, 
@@ -107,8 +107,8 @@ async def login(user_data : Login_User, db : db_dependency, response: Response):
   token = create_token(user.email, timedelta(minutes=10), "access")
   refresh = create_token(user.email, timedelta(days=7), "refresh")
    
-  response.set_cookie(key="access_token", value=token, httponly=True, secure=True, samesite="lax", max_age=600)
-  response.set_cookie(key="refresh_token", value=refresh, httponly=True, secure=True, samesite="lax", max_age=7*24*3600)
+  response.set_cookie(key="access_token", value=token, httponly=True, secure=True, samesite="none", max_age=600)
+  response.set_cookie(key="refresh_token", value=refresh, httponly=True, secure=True, samesite="none", max_age=7*24*3600)
   
   return {"access_token" : token,
           "token_type" : "Bearer"}
@@ -142,7 +142,7 @@ async def refresh_token(request: Request, response: Response, db: db_dependency)
     new_access_token = create_token(user.email, timedelta(minutes=10), "access")
     
     # Update the access token cookie
-    response.set_cookie(key="access_token", value=new_access_token, httponly=True, secure=True, samesite="lax", max_age=600)
+    response.set_cookie(key="access_token", value=new_access_token, httponly=True, secure=True, samesite="none", max_age=600)
     
     return {"message": "Token refreshed successfully", 
             "access_token": new_access_token, 
@@ -150,8 +150,8 @@ async def refresh_token(request: Request, response: Response, db: db_dependency)
 
 @router.post("/logout")
 async def logout(response: Response):
-    response.delete_cookie(key="access_token", httponly=True, secure=True, samesite="lax")
-    response.delete_cookie(key="refresh_token", httponly=True, secure=True, samesite="lax")
+    response.delete_cookie(key="access_token", httponly=True, secure=True, samesite="none")
+    response.delete_cookie(key="refresh_token", httponly=True, secure=True, samesite="none")
     return {"message": "Logged out successfully"}
 
 @router.get("/me")
@@ -168,7 +168,7 @@ async def delete(
     db.commit()
     
     # 2. Modify the injected response directly
-    response.delete_cookie(key="access_token", httponly=True, secure=True, samesite="lax")
-    response.delete_cookie(key="refresh_token", httponly=True, secure=True, samesite="lax")
+    response.delete_cookie(key="access_token", httponly=True, secure=True, samesite="none")
+    response.delete_cookie(key="refresh_token", httponly=True, secure=True, samesite="none")
     
     return {"message": "Account Deleted successfully"}
