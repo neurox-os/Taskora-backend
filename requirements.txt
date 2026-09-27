@@ -1,0 +1,8 @@
+fastapi[standard]
+uvicorn
+python-dotenv
+sqlalchemy
+psycopg2-binary
+groq
+PyJWT
+argon2-cffi
