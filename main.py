@@ -30,5 +30,6 @@ Base.metadata.create_all(engine)
 
 db_dependency = Annotated[Session, Depends(get_db)]
 
-
-
+@app.get("/health")
+def keep_awake():
+    return {"status": "awake"}
